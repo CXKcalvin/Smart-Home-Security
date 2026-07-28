@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>
+        Smart Home Security
+    </title>
+
+
+    <link rel="stylesheet" href="style.css">
+
+
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+
+</head>
+
+
+<body>
+
+
+    <div class="container">
+
+
+        <h1>
+            🔐 Smart Home Security
+        </h1>
+
+
+        <div class="card">
+
+
+            <h3>
+                Koneksi ESP32
+            </h3>
+
+
+            <p id="connection">
+                🔴 Tidak Terhubung
+            </p>
+
+
+
+            <h3>
+                Status Pintu
+            </h3>
+
+
+            <p id="doorStatus">
+                🔒 TERKUNCI
+            </p>
+
+
+
+            <h3>
+                Status Password
+            </h3>
+
+
+            <p id="passwordStatus">
+                -
+            </p>
+
+
+
+            <input id="password" type="password" placeholder="Password">
+
+
+
+            <button onclick="sendPassword()">
+                BUKA PINTU
+            </button>
+
+
+
+            <h3>
+                Auto Close
+            </h3>
+
+
+            <p id="timer">
+                -
+            </p>
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>
