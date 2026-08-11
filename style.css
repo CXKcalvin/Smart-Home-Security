@@ -1,123 +1,333 @@
-body{
-
-font-family: Arial, sans-serif;
-
-background:#0f172a;
-
-color:white;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-height:100vh;
-
-}
-
-
-
-.container{
-
-width:400px;
-
-}
-
-
-
-h1{
-
-text-align:center;
-
-}
-
-
-
-.card{
-
-background:#1e293b;
-
-padding:30px;
-
-border-radius:15px;
-
-text-align:center;
-
-box-shadow:0 0 20px #000;
-
-}
-
-
-
-input{
-
-width:90%;
-
-padding:12px;
-
-font-size:16px;
-
-border-radius:8px;
-
-border:none;
-
-margin:15px;
-
-}
-
-
-
-button{
-
-background:#2563eb;
-
-color:white;
-
-border:none;
-
-padding:12px 30px;
-
-border-radius:8px;
-
-cursor:pointer;
-
-font-size:16px;
-
-}
-
-
-
-button:hover{
-
-background:#1d4ed8;
-
-}
-
-
-
-.locked{
-
-color:#ef4444;
-
-font-size:25px;
-
-}
-
-
-
-.open{
-
-color:#22c55e;
-
-font-size:25px;
-
-}
-
-
-
-#timer{
-
-font-size:30px;
-
-}
+        /* ============================= */
+        /* RESET & GLOBAL               */
+        /* ============================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #0b0e14 0%, #1a1f2b 100%);
+            padding: 1.5rem;
+        }
+
+        /* ============================= */
+        /* MAIN CONTAINER                */
+        /* ============================= */
+        .container {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(28, 34, 44, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 2.2rem 2rem 2.5rem;
+            box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        /* ============================= */
+        /* HEADER                        */
+        /* ============================= */
+        h1 {
+            font-size: 2.1rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #f0f4fe;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.8rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        h1 i {
+            font-size: 2rem;
+            color: #5f8dff;
+            filter: drop-shadow(0 0 8px #3f6edc);
+        }
+
+        /* ============================= */
+        /* INNER CARD                    */
+        /* ============================= */
+        .card {
+            background: rgba(18, 23, 32, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 1.8rem 1.8rem 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        /* ============================= */
+        /* TYPOGRAPHY & STATUS           */
+        /* ============================= */
+        h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+            color: #8895b0;
+            margin-top: 1.5rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3:first-of-type {
+            margin-top: 0;
+        }
+
+        h3 i {
+            font-size: 1rem;
+            color: #5f7bb3;
+        }
+
+        /* Status p tags */
+        .card p {
+            font-size: 1.35rem;
+            font-weight: 600;
+            padding: 0.6rem 1rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 60px;
+            display: inline-block;
+            min-width: 160px;
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            margin-top: 2px;
+            transition: all 0.25s ease;
+        }
+
+        .card p i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+            width: 1.6rem;
+            text-align: center;
+        }
+
+        /* Connection Status */
+        #connection {
+            color: #ff6b6b;
+            background: rgba(255, 70, 70, 0.08);
+            border-left: 4px solid #ff6b6b;
+        }
+
+        #connection.connected {
+            color: #69db7c;
+            background: rgba(80, 220, 100, 0.08);
+            border-left: 4px solid #69db7c;
+        }
+
+        /* Door Status */
+        #doorStatus {
+            color: #fcc419;
+            background: rgba(252, 196, 25, 0.07);
+            border-left: 4px solid #fcc419;
+        }
+
+        #doorStatus.open {
+            color: #74c0fc;
+            background: rgba(100, 180, 255, 0.07);
+            border-left: 4px solid #74c0fc;
+        }
+
+        #doorStatus.closed {
+            color: #fcc419;
+            background: rgba(252, 196, 25, 0.07);
+            border-left: 4px solid #fcc419;
+        }
+
+        /* Password Status */
+        #passwordStatus {
+            color: #b0bdd6;
+            background: rgba(150, 170, 200, 0.05);
+            border-left: 4px solid #5f7bb3;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        #passwordStatus.success {
+            color: #69db7c;
+            background: rgba(80, 220, 100, 0.08);
+            border-left: 4px solid #69db7c;
+        }
+
+        #passwordStatus.error {
+            color: #ff6b6b;
+            background: rgba(255, 70, 70, 0.08);
+            border-left: 4px solid #ff6b6b;
+        }
+
+        #passwordStatus.warning {
+            color: #ffa94d;
+            background: rgba(255, 170, 70, 0.08);
+            border-left: 4px solid #ffa94d;
+        }
+
+        /* ============================= */
+        /* INPUT & BUTTONS               */
+        /* ============================= */
+        input[type="password"] {
+            width: 100%;
+            padding: 1rem 1.4rem;
+            margin: 1.5rem 0 1.2rem;
+            background: rgba(8, 12, 20, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 60px;
+            font-size: 1.2rem;
+            color: #eef3fc;
+            outline: none;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        input[type="password"]::placeholder {
+            color: #5d6f8a;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            font-size: 1rem;
+        }
+
+        input[type="password"]:focus {
+            border-color: #5f8dff;
+            background: rgba(12, 18, 30, 0.8);
+            box-shadow: 0 0 0 3px rgba(95, 141, 255, 0.15), 0 4px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Button Group */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        button {
+            flex: 1 1 auto;
+            min-width: 120px;
+            padding: 0.9rem 1.2rem;
+            border: none;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(145deg, #2a3346, #1d2433);
+            color: #d6e0f5;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.6), 0 2px 0 0 rgba(255, 255, 255, 0.03) inset;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        button i {
+            font-size: 1.2rem;
+        }
+
+        /* Buka Pintu Button */
+        .btn-unlock {
+            background: linear-gradient(145deg, #2f6ed4, #1f4faa) !important;
+            color: white !important;
+            box-shadow: 0 8px 18px -4px #1f4faa60, 0 2px 0 0 #6f9aff40 inset !important;
+        }
+
+        .btn-unlock:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 24px -6px #1f4faa90, 0 2px 0 0 #8fb4ff60 inset !important;
+            background: linear-gradient(145deg, #3a7be0, #2658b8) !important;
+        }
+
+        /* Tutup Pintu Button */
+        .btn-lock {
+            background: linear-gradient(145deg, #3d3f4e, #2a2c3a) !important;
+            color: #c8d2ea !important;
+        }
+
+        .btn-lock:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: linear-gradient(145deg, #4e5066, #343749) !important;
+            box-shadow: 0 12px 24px -6px #00000080, 0 2px 0 0 #6a6f8a40 inset !important;
+        }
+
+        button:active {
+            transform: scale(0.96) translateY(2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ============================= */
+        /* RESPONSIVE                    */
+        /* ============================= */
+        @media (max-width: 440px) {
+            .container {
+                padding: 1.5rem 1.2rem 1.8rem;
+                border-radius: 32px;
+            }
+            h1 {
+                font-size: 1.8rem;
+                gap: 8px;
+            }
+            .card {
+                padding: 1.4rem 1.2rem 1.6rem;
+            }
+            button {
+                min-width: 100px;
+                font-size: 1rem;
+                padding: 0.8rem 0.8rem;
+            }
+            .card p {
+                font-size: 1.1rem;
+                min-width: 130px;
+                padding: 0.4rem 1rem;
+            }
+        }
+
+        /* ============================= */
+        /* ANIMATIONS                    */
+        /* ============================= */
+        @keyframes softPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .status-pulse {
+            animation: softPulse 2.2s infinite ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card p {
+            animation: slideIn 0.3s ease-out;
+        }
