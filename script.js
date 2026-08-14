@@ -1,152 +1,151 @@
-    // =============================
-    // MQTT CONFIGURATION
-    // =============================
-    const client = mqtt.connect(
-        "wss://broker.hivemq.com:8884/mqtt"
-    );
+// =============================
+// MQTT CONFIGURATION
+// =============================
+const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt");
 
-    const controlTopic = "smarthome/door/control";
-    const statusTopic = "smarthome/door/status";
+const controlTopic = "smarthome/door/control";
+const statusTopic = "smarthome/door/status";
 
-    // =============================
-    // DOM ELEMENTS
-    // =============================
-    const connectionEl = document.getElementById('connection');
-    const doorStatusEl = document.getElementById('doorStatus');
-    const passwordStatusEl = document.getElementById('passwordStatus');
-    const passwordInput = document.getElementById('password');
+// =============================
+// DOM ELEMENTS
+// =============================
+const connectionEl = document.getElementById("connection");
+const doorStatusEl = document.getElementById("doorStatus");
+const passwordStatusEl = document.getElementById("passwordStatus");
+const passwordInput = document.getElementById("password");
 
-    // =============================
-    // HELPER FUNCTIONS
-    // =============================
-    function setConnectionStatus(connected) {
-        if (connected) {
-            connectionEl.className = 'connected';
-            connectionEl.innerHTML = '<i class="fas fa-circle"></i> 🟢 ESP32 Terhubung';
-        } else {
-            connectionEl.className = '';
-            connectionEl.innerHTML = '<i class="fas fa-circle"></i> 🔴 ESP32 Offline';
-        }
-    }
+// =============================
+// HELPER FUNCTIONS
+// =============================
+function setConnectionStatus(connected) {
+  if (connected) {
+    connectionEl.className = "connected";
+    connectionEl.innerHTML = '<i class="fas fa-circle"></i> 🟢 ESP32 Terhubung';
+  } else {
+    connectionEl.className = "";
+    connectionEl.innerHTML = '<i class="fas fa-circle"></i> 🔴 ESP32 Offline';
+  }
+}
 
-    function setDoorStatus(status) {
-        if (status === 'OPEN') {
-            doorStatusEl.className = 'open';
-            doorStatusEl.innerHTML = '<i class="fas fa-lock-open"></i> 🔓 PINTU TERBUKA';
-        } else if (status === 'CLOSED') {
-            doorStatusEl.className = 'closed';
-            doorStatusEl.innerHTML = '<i class="fas fa-lock"></i> 🔒 PINTU TERKUNCI';
-        }
-    }
+function setDoorStatus(status) {
+  if (status === "OPEN") {
+    doorStatusEl.className = "open";
+    doorStatusEl.innerHTML =
+      '<i class="fas fa-lock-open"></i> 🔓 PINTU TERBUKA';
+  } else if (status === "CLOSED") {
+    doorStatusEl.className = "closed";
+    doorStatusEl.innerHTML = '<i class="fas fa-lock"></i> 🔒 PINTU TERKUNCI';
+  }
+}
 
-    function setPasswordStatus(status, message) {
-        // Reset classes
-        passwordStatusEl.className = '';
-        
-        if (status === 'success') {
-            passwordStatusEl.className = 'success';
-            passwordStatusEl.innerHTML = `<i class="fas fa-check-circle"></i> ✅ ${message}`;
-        } else if (status === 'error') {
-            passwordStatusEl.className = 'error';
-            passwordStatusEl.innerHTML = `<i class="fas fa-times-circle"></i> ❌ ${message}`;
-        } else if (status === 'warning') {
-            passwordStatusEl.className = 'warning';
-            passwordStatusEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ ${message}`;
-        } else {
-            passwordStatusEl.innerHTML = `<i class="fas fa-minus-circle"></i> ${message || '-'}`;
-        }
-    }
+function setPasswordStatus(status, message) {
+  // Reset classes
+  passwordStatusEl.className = "";
 
-    // =============================
-    // MQTT CONNECT
-    // =============================
-    client.on("connect", () => {
-        setConnectionStatus(true);
-        client.subscribe(statusTopic);
-    });
+  if (status === "success") {
+    passwordStatusEl.className = "success";
+    passwordStatusEl.innerHTML = `<i class="fas fa-check-circle"></i> ✅ ${message}`;
+  } else if (status === "error") {
+    passwordStatusEl.className = "error";
+    passwordStatusEl.innerHTML = `<i class="fas fa-times-circle"></i> ❌ ${message}`;
+  } else if (status === "warning") {
+    passwordStatusEl.className = "warning";
+    passwordStatusEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ ${message}`;
+  } else {
+    passwordStatusEl.innerHTML = `<i class="fas fa-minus-circle"></i> ${message || "-"}`;
+  }
+}
 
-    // =============================
-    // MQTT OFFLINE
-    // =============================
-    client.on("offline", () => {
-        setConnectionStatus(false);
-    });
+// =============================
+// MQTT CONNECT
+// =============================
+client.on("connect", () => {
+  setConnectionStatus(true);
+  client.subscribe(statusTopic);
+});
 
-    // =============================
-    // MQTT MESSAGE
-    // =============================
-    client.on("message", (topic, message) => {
-        let status = message.toString();
+// =============================
+// MQTT OFFLINE
+// =============================
+client.on("offline", () => {
+  setConnectionStatus(false);
+});
 
-        // =====================
-        // ESP32 ONLINE
-        // =====================
-        if (status === "ONLINE") {
-            return;
-        }
+// =============================
+// MQTT MESSAGE
+// =============================
+client.on("message", (topic, message) => {
+  let status = message.toString();
 
-        // =====================
-        // PINTU TERBUKA
-        // =====================
-        if (status === "OPEN") {
-            setDoorStatus('OPEN');
-            setPasswordStatus('success', 'PASSWORD BENAR');
-        }
+  // =====================
+  // ESP32 ONLINE
+  // =====================
+  if (status === "ONLINE") {
+    return;
+  }
 
-        // =====================
-        // PINTU TERKUNCI
-        // =====================
-        if (status === "CLOSED") {
-            setDoorStatus('CLOSED');
-        }
+  // =====================
+  // PINTU TERBUKA
+  // =====================
+  if (status === "OPEN") {
+    setDoorStatus("OPEN");
+    setPasswordStatus("success", "PASSWORD BENAR");
+  }
 
-        // =====================
-        // PASSWORD SALAH
-        // =====================
-        if (status === "PASSWORD_SALAH") {
-            setPasswordStatus('error', 'PASSWORD SALAH');
-        }
-    });
+  // =====================
+  // PINTU TERKUNCI
+  // =====================
+  if (status === "CLOSED") {
+    setDoorStatus("CLOSED");
+  }
 
-    // =============================
-    // BUKA PINTU
-    // =============================
-    function sendPassword() {
-        let pw = passwordInput.value;
+  // =====================
+  // PASSWORD SALAH
+  // =====================
+  if (status === "PASSWORD_SALAH") {
+    setPasswordStatus("error", "PASSWORD SALAH");
+  }
+});
 
-        if (pw === "") {
-            setPasswordStatus('warning', 'Masukkan password');
-            return;
-        }
+// =============================
+// BUKA PINTU
+// =============================
+function sendPassword() {
+  let pw = passwordInput.value;
 
-        client.publish(controlTopic, pw);
-        passwordInput.value = '';
-    }
+  if (pw === "") {
+    setPasswordStatus("warning", "Masukkan password");
+    return;
+  }
 
-    // =============================
-    // TUTUP PINTU
-    // =============================
-    function closeDoor() {
-        client.publish(controlTopic, "CLOSE");
-    }
+  client.publish(controlTopic, pw);
+  passwordInput.value = "";
+}
 
-    // =============================
-    // KEYBOARD SHORTCUT
-    // =============================
-    passwordInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            sendPassword();
-        }
-    });
+// =============================
+// TUTUP PINTU
+// =============================
+function closeDoor() {
+  client.publish(controlTopic, "CLOSE");
+}
 
-    // =============================
-    // INITIAL STATE
-    // =============================
-    setConnectionStatus(false);
-    setDoorStatus('CLOSED');
-    setPasswordStatus(null, '-');
+// =============================
+// KEYBOARD SHORTCUT
+// =============================
+passwordInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    sendPassword();
+  }
+});
 
-    console.log('🔐 Smart Home Security siap!');
-    console.log('📡 Broker: wss://broker.hivemq.com:8884/mqtt');
-    console.log('📨 Control Topic:', controlTopic);
-    console.log('📨 Status Topic:', statusTopic);
+// =============================
+// INITIAL STATE
+// =============================
+setConnectionStatus(false);
+setDoorStatus("CLOSED");
+setPasswordStatus(null, "-");
+
+console.log("🔐 Smart Home Security siap!");
+console.log("📡 Broker: wss://broker.hivemq.com:8884/mqtt");
+console.log("📨 Control Topic:", controlTopic);
+console.log("📨 Status Topic:", statusTopic);
