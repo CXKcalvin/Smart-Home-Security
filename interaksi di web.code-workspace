@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"path": "."
+	},
+	{
+		"name": "smart home security",
+		"path": "../../../Dokumen/PlatformIO/Projects/smart home security"
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "smart home security"
+  }
+}
