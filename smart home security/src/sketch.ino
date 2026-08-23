@@ -111,9 +111,24 @@ void showLCD(String line1, String line2)
 // =====================
 void beep(int duration)
 {
-    tone(BUZZER_PIN, 300);
-    delay(duration);
-    noTone(BUZZER_PIN);
+    // Sengaja TIDAK pakai tone()/noTone().
+    // Di ESP32, tone() memakai hardware LEDC yang juga dipakai oleh
+    // ESP32Servo. Kalau LEDC servo terganggu, sinyal PWM ke servo bisa
+    // hilang/rusak, dan kalau kita "perbaiki" dengan detach()+attach(),
+    // servo kehilangan sinyal sesaat -> mekanik pintu bisa kebuka
+    // sendiri sebelum servo narik balik ke 0. Solusinya: buzzer di-toggle
+    // manual pakai digitalWrite, jadi LEDC servo tidak pernah tersentuh
+    // dan servo TIDAK PERNAH perlu di-detach.
+    unsigned long startTime = millis();
+
+    while (millis() - startTime < (unsigned long)duration)
+    {
+        digitalWrite(BUZZER_PIN, HIGH);
+        delayMicroseconds(600);
+
+        digitalWrite(BUZZER_PIN, LOW);
+        delayMicroseconds(600);
+    }
 }
 
 // =====================
@@ -154,12 +169,11 @@ void forceLockPosition()
 {
     Serial.println("=== FORCE LOCK: PAKSA SERVO KE 0 DERAJAT ===");
 
-    // doorServo.detach();
-    // delay(200);
-
-    // doorServo.attach(SERVO_PIN);
-    // delay(200);
-
+    // TIDAK detach()/attach() di sini dengan sengaja.
+    // beep() sekarang tidak lagi pakai tone()/LEDC, jadi channel PWM
+    // servo tidak pernah terganggu -> write(0) langsung cukup, dan
+    // servo tidak pernah kehilangan sinyal (yang sebelumnya bikin
+    // mekanik pintu sempat kebuka sendiri saat detach()).
     doorServo.write(0);
     delay(1000);
 
@@ -179,10 +193,9 @@ void openDoor(bool accessGranted)
 {
     if (!accessGranted)
     {
-        // Safety net tambahan: walau seharusnya fungsi ini
-        // tidak pernah dipanggil dengan accessGranted = false,
-        // kalau suatu saat terjadi, servo tetap dipaksa ke 0.
-        Serial.println("AKSES DITOLAK: SERVO TIDAK AKAN BERGERAK");
+        Serial.println(
+            "AKSES DITOLAK: SERVO TIDAK AKAN BERGERAK");
+
         forceLockPosition();
         return;
     }
@@ -190,6 +203,14 @@ void openDoor(bool accessGranted)
     Serial.println(
         "PERINTAH: BUKA PINTU");
 
+    // =============================
+    // BUZZER AKSES BERHASIL
+    // =============================
+    beep(100);
+
+    // =============================
+    // BUKA SERVO
+    // =============================
     doorServo.write(90);
 
     delay(1000);
@@ -199,9 +220,6 @@ void openDoor(bool accessGranted)
     showLCD(
         "SMART HOME",
         "PINTU TERBUKA");
-
-    // SEMENTARA MATIKAN BEEP
-    // beep(100);
 
     publishDoorStatus();
 
@@ -215,18 +233,6 @@ void openDoor(bool accessGranted)
 void closeDoor()
 {
     Serial.println("=== CLOSE DOOR ===");
-
-    Serial.println("Detach servo...");
-
-    doorServo.detach();
-
-    delay(200);
-
-    Serial.println("Attach servo kembali...");
-
-    doorServo.attach(SERVO_PIN);
-
-    delay(200);
 
     Serial.println("Servo → 0 derajat");
 
