@@ -3,11 +3,9 @@
 // =============================
 const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt");
 
-const controlTopic =
-    "cxkcalvin/smarthome/door/control";
+const controlTopic = "cxkcalvin/smarthome/door/control";
 
-const statusTopic =
-    "cxkcalvin/smarthome/door/status";
+const statusTopic = "cxkcalvin/smarthome/door/status";
 
 // =============================
 // DOM ELEMENTS
@@ -181,39 +179,25 @@ client.on("message", (topic, message) => {
 // PASSWORD
 // =============================
 function sendPassword() {
-  const pw =
-    passwordInput.value.trim();
+  const pw = passwordInput.value.trim();
 
   if (pw === "") {
-    setPasswordStatus(
-      "warning",
-      "Masukkan password"
-    );
+    setPasswordStatus("warning", "Masukkan password");
 
     return;
   }
 
   if (!client.connected) {
-    setPasswordStatus(
-      "error",
-      "MQTT tidak terhubung"
-    );
+    setPasswordStatus("error", "MQTT tidak terhubung");
 
     return;
   }
 
-  const command =
-    "OPEN:" + pw;
+  const command = "OPEN:" + pw;
 
-  console.log(
-    "Mengirim command:",
-    command
-  );
+  console.log("Mengirim command:", command);
 
-  client.publish(
-    controlTopic,
-    command
-  );
+  client.publish(controlTopic, command);
 
   passwordInput.value = "";
 }
